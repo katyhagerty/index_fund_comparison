@@ -41,7 +41,7 @@ def yf_fund(ticker, start_date, end_date, principal):
     
     df_yf_fund['Position'] = df_yf_fund.Close * no_shares            
     df_yf_fund['legend'] = ticker_label            
-    df_yf_fund.columns = [f'Stock {i}' for i in df_yf_fund.columns]
+    df_yf_fund.columns = [f'Index {i}' for i in df_yf_fund.columns]
             
     return df_yf_fund, yf_fund_cost_basis
 
@@ -58,7 +58,7 @@ def managed_fund(principal, current_value, df_yf_fund):
     df_managed_fund['Position'] = [principal * (1 + rate) ** (i/365) for i in range(period + 1)]
     df_managed_fund = df_managed_fund[df_managed_fund.Date.isin(df_yf_fund.index.values)]
     df_managed_fund = df_managed_fund.set_index('Date')
-    df_managed_fund.legend = 'Managed Fund'
+    df_managed_fund['legend'] = 'Managed Fund'
     df_managed_fund.columns = [f'Managed {i}' for i in df_managed_fund.columns]
     
     return df_managed_fund, rate
@@ -69,7 +69,7 @@ def create_source(df_fund1, df_fund2):
     df_fund2.index = pd.to_datetime(df_fund2.index)
     
     df_source = df_fund1.join(df_fund2, how='inner')    
-    df_source['Difference'] = df_fund1['Managed Position'] - df_fund2['Stock Position']
+    df_source['Difference'] = df_fund1['Managed Position'] - df_fund2['Index Position']
     
     return df_source
 
@@ -78,13 +78,13 @@ def make_plot(df_source, title):
     TOOLTIPS = [
 	            ('Date', '@Date{%Y-%m-%d}'), #'@Date{%F}'),
 	            ('Managed Fund', '@{Managed Position}{$0,0}'),        
-	            ('Index Fund', '@{Stock Position}{$0,0}'), 
+	            ('Index', '@{Index Position}{$0,0}'), 
 	            ('Difference', '@Difference{$0,0}'),                
 	            ]
       
     plot = figure(width_policy = 'fit', height_policy = 'fit', x_axis_type='datetime', title = title)
-    plot.line('Date', 'Managed Position', source = source, legend_label = 'Managed Position', color = d3['Category10'][10][0], line_width = 3)
-    plot.line('Date','Stock Position', source = source, legend_label = 'Stock Position', color = d3['Category10'][10][1], line_width = 3)
+    plot.line('Date', 'Managed Position', source = source, legend_field = 'Managed legend', color = d3['Category10'][10][0], line_width = 3)
+    plot.line('Date','Index Position', source = source, legend_field = 'Index legend', color = d3['Category10'][10][1], line_width = 3)
     plot.add_tools(CrosshairTool())
     plot.add_tools(HoverTool(tooltips = TOOLTIPS, formatters={'@Date': 'datetime'}))
     plot.legend.location = 'top_left'
@@ -121,7 +121,7 @@ min_date = yf.Ticker(ticker_symbols[ticker]).history(period='max').index[0].date
 max_date = yf.Ticker(ticker_symbols[ticker]).history(period='max').index[-1].date()
 
 #     fund_1 is mananged fund
-fund_2 = Select(title='Index Fund', value = 'S&P 500', options = ['DJI', 'S&P 500'])
+fund_2 = Select(title='Index', value = 'S&P 500', options = ['DJI', 'S&P 500'])
 
 start_date_picker = DatePicker(title = 'Start Date', value = start_date, min_date = min_date, 
                                   max_date = max_date)
@@ -139,12 +139,12 @@ df_source = create_source(df_fund_1, df_fund_2)
 
 #Set-up Plots
 
-plot1, source = make_plot(df_source, 'Managed Fund vs. Index Fund')
+plot1, source = make_plot(df_source, 'Managed Fund vs. Index')
        
 # Layout
 inputs = column(principal_spinner, current_value_spinner, fund_2, start_date_picker, end_date_picker)
 row1 = row(plot1, inputs)
-tab_managed = Panel(child = row1, title = 'Managed Fund vs Index Fund')
+tab_managed = Panel(child = row1, title = 'Managed Fund vs Index')
 
 layout = Tabs(tabs=[tab_managed])
     
