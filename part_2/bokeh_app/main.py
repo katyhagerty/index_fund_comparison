@@ -180,11 +180,11 @@ current_value_spinner = {}
 fund_1 = {}
 fund_2 = {}
 
-fund_1[1] = Select(title='Index Fund', value = 'S&P 500', options = ['DJI', 'S&P 500'])
+fund_1[1] = Select(title='Index', value = 'S&P 500', options = ['DJI', 'S&P 500'])
 fund_2[1] = None
 
 fund_1[2] = TextInput(value="AMZN", title="Stock Ticker Symbol")
-fund_2[2] = Select(title='Index Fund', value = 'S&P 500', options = ['DJI', 'S&P 500'])
+fund_2[2] = Select(title='Index', value = 'S&P 500', options = ['DJI', 'S&P 500'])
 
 fund_1[3] = TextInput(value="AMZN", title="Stock Ticker Symbol")
 fund_2[3] = TextInput(value="GOOG", title="Stock 2 Ticker Symbol")
@@ -211,13 +211,13 @@ df_source[1] = create_source(df_fund_1[1], df_fund_2[1])
 
 #Set-up Plots
 
-plot1, source[1] = make_plot(df_source[1], 'Managed Fund vs. Index Fund')
+plot1, source[1] = make_plot(df_source[1], 'Managed Fund vs. Index')
       
 # Layout
 
 inputs = column(principal_spinner[1], current_value_spinner[1], fund_1[1], start_date_picker[1], 
                 end_date_picker[1])
-tab_managed = Panel(child = row(plot1, inputs), title = 'Managed Fund vs Index Fund')
+tab_managed = Panel(child = row(plot1, inputs), title = 'Managed Fund vs Index')
   
 # Tab2
 # Data
@@ -228,14 +228,14 @@ df_source[2] = create_source(df_fund_1[2], df_fund_2[2])
 
 # Plots
 
-plot2, source[2] = make_plot(df_source[2], 'Stock vs. Index Fund')
+plot2, source[2] = make_plot(df_source[2], 'Stock vs. Index')
 current_value_stock = df_source[2]['Stock Position'][-1]
 
 # Layout
 
 inputs_stock = column(principal_spinner[2], fund_1[2], fund_2[2], start_date_picker[2], 
                       end_date_picker[2])
-tab_stock = Panel(child = row(plot2, inputs_stock), title = 'Stock vs Index Fund')
+tab_stock = Panel(child = row(plot2, inputs_stock), title = 'Stock vs Index')
 
 layout = Tabs(tabs=[tab_managed, tab_stock])
     
