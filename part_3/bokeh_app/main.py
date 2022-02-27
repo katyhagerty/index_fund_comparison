@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# =============================================================================
+# To run app, open terminal in folder containing main.py
+# and run:
+#     bokeh serve --show main.py
+# =============================================================================
+
 import yfinance as yf
 import pandas as pd
 import numpy as np
