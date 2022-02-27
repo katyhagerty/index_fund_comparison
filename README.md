@@ -6,8 +6,8 @@ Please see my Medium posts for an in-depth explaination of the code:
 2. Part 2
 3. Part 3
 
-# =============================================================================
-# To run app with python script, open terminal in folder containing main.py
-# and run:
-#     bokeh serve --show main.py
-# =============================================================================
+ =============================================================================
+ To run app with python script, open terminal in folder containing main.py
+ and run:
+     bokeh serve --show main.py
+ =============================================================================
