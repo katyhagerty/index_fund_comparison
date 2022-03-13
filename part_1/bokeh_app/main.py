@@ -35,6 +35,7 @@ def yf_fund(ticker, start_date, end_date, principal):
 
     df_yf_fund = pd.DataFrame()
     df_yf_fund = yf_fund_ticker.history(start=start_date, end=end_date)
+    df_yf_fund = df_yf_fund.groupby(df_yf_fund.index).first() #drops duplicates dates from after hours trading
 
     yf_fund_cost_basis = df_yf_fund.iloc[0, 0]
     no_shares = principal/yf_fund_cost_basis
